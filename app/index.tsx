@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Plus, Menu, MoreVertical } from 'lucide-react-native';
+import { Plus, Menu, MoveVertical as MoreVertical } from 'lucide-react-native';
 import { useHabitStore } from '@/store/habitStore';
 import { DateHeader } from '@/components/DateHeader';
 import { HabitRow } from '@/components/HabitRow';
