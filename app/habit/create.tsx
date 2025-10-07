@@ -107,8 +107,7 @@ export default function CreateHabitScreen() {
 
           <View style={styles.colorSection}>
             <Text style={styles.label}>Color</Text>
-            <View style={styles.colorPreview} />
-            <View style={[styles.colorBox, { backgroundColor: color }]} />
+            <ColorPicker selectedColor={color} onColorSelect={setColor} />
           </View>
         </View>
 
@@ -218,10 +217,6 @@ export default function CreateHabitScreen() {
             numberOfLines={4}
           />
         </View>
-
-        <View style={styles.colorPickerSection}>
-          <ColorPicker selectedColor={color} onColorSelect={setColor} />
-        </View>
       </ScrollView>
 
       <FrequencyPicker
@@ -283,6 +278,7 @@ const styles = StyleSheet.create({
   },
   formGroup: {
     marginBottom: 20,
+    flex: 1,
   },
   label: {
     fontSize: 14,
@@ -314,15 +310,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   colorSection: {
-    width: 100,
-  },
-  colorPreview: {
-    marginBottom: 8,
-  },
-  colorBox: {
-    width: 80,
-    height: 80,
-    borderRadius: 8,
+    flex: 0.3,
   },
   segmentControl: {
     flexDirection: 'row',
@@ -346,9 +334,5 @@ const styles = StyleSheet.create({
   },
   segmentTextActive: {
     color: '#fff',
-  },
-  colorPickerSection: {
-    marginTop: 20,
-    marginBottom: 40,
   },
 });

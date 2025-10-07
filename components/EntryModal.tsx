@@ -30,8 +30,8 @@ export const EntryModal = ({ visible, habit, date, currentValue, onClose, onSave
 
   if (!habit || !date) return null;
 
-  const handleSave = () => {
-    onSave(value, notes || undefined);
+  const handleSave = (newValue: EntryValue) => {
+    onSave(newValue, notes || undefined);
     onClose();
   };
 
@@ -50,20 +50,14 @@ export const EntryModal = ({ visible, habit, date, currentValue, onClose, onSave
       <View style={styles.yesNoButtons}>
         <TouchableOpacity
           style={styles.iconButton}
-          onPress={() => {
-            setValue('yes');
-            handleSave();
-          }}
+          onPress={() => handleSave('yes')}
         >
           <Check size={48} color="#4A9EFF" strokeWidth={3} />
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.iconButton}
-          onPress={() => {
-            setValue('no');
-            handleSave();
-          }}
+          onPress={() => handleSave('no')}
         >
           <X size={48} color="#888" strokeWidth={3} />
         </TouchableOpacity>
@@ -95,7 +89,7 @@ export const EntryModal = ({ visible, habit, date, currentValue, onClose, onSave
         placeholderTextColor="#666"
       />
 
-      <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+      <TouchableOpacity style={styles.saveButton} onPress={() => handleSave(value)}>
         <Text style={styles.saveButtonText}>SAVE</Text>
       </TouchableOpacity>
     </View>

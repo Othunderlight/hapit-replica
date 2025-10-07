@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
 import { Plus, Menu, MoveVertical as MoreVertical } from 'lucide-react-native';
 import { useHabitStore } from '@/store/habitStore';
 import { DateHeader } from '@/components/DateHeader';
@@ -19,15 +19,22 @@ export default function HabitsListScreen() {
   const [selectedHabit, setSelectedHabit] = useState<Habit | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
-  useEffect(() => {
-    loadHabits();
-  }, [loadHabits]);
+  useFocusEffect(
+    useCallback(() => {
+      const loadData = async () => {
+        await loadHabits();
+      };
+      loadData();
+    }, [loadHabits])
+  );
 
-  useEffect(() => {
-    habits.forEach(habit => {
-      loadEntriesForHabit(habit.id);
-    });
-  }, [habits, loadEntriesForHabit]);
+  useFocusEffect(
+    useCallback(() => {
+      habits.forEach(habit => {
+        loadEntriesForHabit(habit.id);
+      });
+    }, [habits, loadEntriesForHabit])
+  );
 
   const handleAddHabit = () => {
     setShowTypeModal(true);

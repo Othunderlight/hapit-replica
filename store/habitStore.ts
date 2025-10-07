@@ -104,14 +104,14 @@ export const useHabitStore = create<HabitStore>((set, get) => ({
       set(state => {
         const habitEntries = state.entries[habitId] || [];
         const existingIndex = habitEntries.findIndex(
-          e => e.date.getTime() === entry.date.getTime()
+          e => new Date(e.date).toDateString() === new Date(entry.date).toDateString()
         );
 
         const updatedEntries =
           existingIndex >= 0
             ? habitEntries.map((e, i) => (i === existingIndex ? entry : e))
             : [...habitEntries, entry].sort(
-                (a, b) => b.date.getTime() - a.date.getTime()
+                (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
               );
 
         return {

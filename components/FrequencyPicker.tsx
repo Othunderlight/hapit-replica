@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Modal, TouchableOpacity, Pressable, TextInput } from 'react-native';
 import { Frequency, FrequencyType } from '@/models/Habit';
 
@@ -11,22 +11,47 @@ interface FrequencyPickerProps {
 
 export const FrequencyPicker = ({ visible, currentFrequency, onClose, onSave }: FrequencyPickerProps) => {
   const [selectedType, setSelectedType] = useState<FrequencyType>(currentFrequency.type);
-  const [value, setValue] = useState<number>(currentFrequency.value || 1);
-  const [period, setPeriod] = useState<number>(currentFrequency.period || 7);
+  const [everyXDays, setEveryXDays] = useState(currentFrequency.type === 'every_x_days' ? currentFrequency.value || 1 : 1);
+  const [xTimesPerWeek, setXTimesPerWeek] = useState(currentFrequency.type === 'x_times_per_week' ? currentFrequency.value || 1 : 1);
+  const [xTimesPerMonth, setXTimesPerMonth] = useState(currentFrequency.type === 'x_times_per_month' ? currentFrequency.value || 1 : 1);
+  const [xTimesInYDaysValue, setXTimesInYDaysValue] = useState(currentFrequency.type === 'x_times_in_y_days' ? currentFrequency.value || 1 : 1);
+  const [xTimesInYDaysPeriod, setXTimesInYDaysPeriod] = useState(currentFrequency.type === 'x_times_in_y_days' ? currentFrequency.period || 7 : 7);
+
+  useEffect(() => {
+    setSelectedType(currentFrequency.type);
+    if (currentFrequency.type === 'every_x_days') setEveryXDays(currentFrequency.value || 1);
+    if (currentFrequency.type === 'x_times_per_week') setXTimesPerWeek(currentFrequency.value || 1);
+    if (currentFrequency.type === 'x_times_per_month') setXTimesPerMonth(currentFrequency.value || 1);
+    if (currentFrequency.type === 'x_times_in_y_days') {
+      setXTimesInYDaysValue(currentFrequency.value || 1);
+      setXTimesInYDaysPeriod(currentFrequency.period || 7);
+    }
+  }, [visible, currentFrequency]);
 
   const handleSave = () => {
-    const frequency: Frequency = {
-      type: selectedType,
-      value: selectedType === 'every_day' ? undefined : value,
-      period: selectedType === 'x_times_in_y_days' ? period : undefined,
-    };
+    let frequency: Frequency;
+    switch (selectedType) {
+      case 'every_x_days':
+        frequency = { type: 'every_x_days', value: everyXDays };
+        break;
+      case 'x_times_per_week':
+        frequency = { type: 'x_times_per_week', value: xTimesPerWeek };
+        break;
+      case 'x_times_per_month':
+        frequency = { type: 'x_times_per_month', value: xTimesPerMonth };
+        break;
+      case 'x_times_in_y_days':
+        frequency = { type: 'x_times_in_y_days', value: xTimesInYDaysValue, period: xTimesInYDaysPeriod };
+        break;
+      default:
+        frequency = { type: 'every_day' };
+    }
     onSave(frequency);
     onClose();
   };
 
-  const renderOption = (type: FrequencyType, label: string, showValue: boolean = false, showPeriod: boolean = false) => {
+  const renderOption = (type: FrequencyType, label: string, children?: React.ReactNode) => {
     const isSelected = selectedType === type;
-
     return (
       <View style={styles.optionContainer}>
         <TouchableOpacity
@@ -38,48 +63,9 @@ export const FrequencyPicker = ({ visible, currentFrequency, onClose, onSave }: 
           </View>
           <Text style={styles.optionText}>{label}</Text>
         </TouchableOpacity>
-
-        {isSelected && showValue && (
-          <View style={styles.inputRow}>
-            <TextInput
-              style={styles.input}
-              value={String(value)}
-              onChangeText={(text) => setValue(parseInt(text) || 1)}
-              keyboardType="numeric"
-            />
-            {showPeriod && (
-              <>
-                <Text style={styles.inputLabel}>times in</Text>
-                <TextInput
-                  style={styles.input}
-                  value={String(period)}
-                  onChangeText={(text) => setPeriod(parseInt(text) || 7)}
-                  keyboardType="numeric"
-                />
-                <Text style={styles.inputLabel}>days</Text>
-              </>
-            )}
-          </View>
-        )}
+        {isSelected && children}
       </View>
     );
-  };
-
-  const getFrequencyLabel = () => {
-    switch (selectedType) {
-      case 'every_day':
-        return 'Every day';
-      case 'every_x_days':
-        return `Every ${value} days`;
-      case 'x_times_per_week':
-        return `${value} times per week`;
-      case 'x_times_per_month':
-        return `${value} times per month`;
-      case 'x_times_in_y_days':
-        return `${value} times in ${period} days`;
-      default:
-        return 'Every day';
-    }
   };
 
   return (
@@ -92,10 +78,32 @@ export const FrequencyPicker = ({ visible, currentFrequency, onClose, onSave }: 
       <Pressable style={styles.overlay} onPress={onClose}>
         <Pressable style={styles.container} onPress={(e) => e.stopPropagation()}>
           {renderOption('every_day', 'Every day')}
-          {renderOption('every_x_days', `Every ${value} days`, true)}
-          {renderOption('x_times_per_week', `${value} times per week`, true)}
-          {renderOption('x_times_per_month', `${value} times per month`, true)}
-          {renderOption('x_times_in_y_days', `${value} times in ${period} days`, true, true)}
+          {renderOption('every_x_days', 'Every', (
+            <View style={styles.inputRow}>
+              <TextInput style={styles.input} value={String(everyXDays)} onChangeText={(t) => setEveryXDays(parseInt(t) || 1)} keyboardType="numeric" />
+              <Text style={styles.inputLabel}>days</Text>
+            </View>
+          ))}
+          {renderOption('x_times_per_week', 'times per week', (
+            <View style={styles.inputRow}>
+              <TextInput style={styles.input} value={String(xTimesPerWeek)} onChangeText={(t) => setXTimesPerWeek(parseInt(t) || 1)} keyboardType="numeric" />
+              <Text style={styles.inputLabel}>times per week</Text>
+            </View>
+          ))}
+          {renderOption('x_times_per_month', 'times per month', (
+            <View style={styles.inputRow}>
+              <TextInput style={styles.input} value={String(xTimesPerMonth)} onChangeText={(t) => setXTimesPerMonth(parseInt(t) || 1)} keyboardType="numeric" />
+              <Text style={styles.inputLabel}>times per month</Text>
+            </View>
+          ))}
+          {renderOption('x_times_in_y_days', 'times in', (
+            <View style={styles.inputRow}>
+              <TextInput style={styles.input} value={String(xTimesInYDaysValue)} onChangeText={(t) => setXTimesInYDaysValue(parseInt(t) || 1)} keyboardType="numeric" />
+              <Text style={styles.inputLabel}>times in</Text>
+              <TextInput style={styles.input} value={String(xTimesInYDaysPeriod)} onChangeText={(t) => setXTimesInYDaysPeriod(parseInt(t) || 7)} keyboardType="numeric" />
+              <Text style={styles.inputLabel}>days</Text>
+            </View>
+          ))}
 
           <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
             <Text style={styles.saveButtonText}>SAVE</Text>
