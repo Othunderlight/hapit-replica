@@ -6,6 +6,8 @@ import { LineChart, BarChart } from 'react-native-gifted-charts';
 import { useHabitStore } from '@/store/habitStore';
 import { calculateScore, calculateStreaks, getMonthlyData, getFrequencyByDayOfWeek } from '@/utils/habitStats';
 
+import { CalendarView } from '@/components/CalendarView';
+
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 type TimeFilter = 'Day' | 'Week' | 'Month' | 'Quarter' | 'Year';
@@ -112,7 +114,7 @@ export default function HabitDetailsScreen() {
           </View>
         </View>
         <View style={styles.headerActions}>
-          <TouchableOpacity style={styles.headerButton}>
+          <TouchableOpacity style={styles.headerButton} onPress={() => router.push(`/habit/edit/${habit.id}`)}>
             <Edit size={24} color="#fff" />
           </TouchableOpacity>
           <TouchableOpacity style={styles.headerButton}>
@@ -225,10 +227,7 @@ export default function HabitDetailsScreen() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Calendar</Text>
           <View style={styles.calendarCard}>
-            <Text style={styles.calendarPlaceholder}>Calendar heatmap view</Text>
-            <TouchableOpacity style={styles.editButton}>
-              <Text style={styles.editButtonText}>EDIT</Text>
-            </TouchableOpacity>
+            <CalendarView habit={habit} entries={entries} />
           </View>
         </View>
 

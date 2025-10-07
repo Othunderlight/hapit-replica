@@ -45,7 +45,7 @@ export const HabitRow = ({ habit, entries, onDayPress, onHabitPress, daysToShow 
       if (entry.value === 'yes') {
         return (
           <View style={[styles.checkContainer, { backgroundColor: habit.color }]}>
-            <Check size={20} color="#000" strokeWidth={3} />
+            <Check size={20} color="#fff" strokeWidth={3} />
           </View>
         );
       } else {
@@ -134,15 +134,15 @@ const styles = StyleSheet.create({
     borderColor: '#444',
   },
   checkContainer: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
   },
   xContainer: {
-    width: 28,
-    height: 28,
+    width: 24,
+    height: 24,
     alignItems: 'center',
     justifyContent: 'center',
   },

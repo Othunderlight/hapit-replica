@@ -37,16 +37,6 @@ export const EntryModal = ({ visible, habit, date, currentValue, onClose, onSave
 
   const renderYesNoContent = () => (
     <View style={styles.yesNoContainer}>
-      <Text style={styles.notesLabel}>Notes</Text>
-      <TextInput
-        style={styles.notesInput}
-        value={notes}
-        onChangeText={setNotes}
-        placeholder="Add notes..."
-        placeholderTextColor="#666"
-        multiline
-      />
-
       <View style={styles.yesNoButtons}>
         <TouchableOpacity
           style={styles.iconButton}
@@ -62,6 +52,15 @@ export const EntryModal = ({ visible, habit, date, currentValue, onClose, onSave
           <X size={48} color="#888" strokeWidth={3} />
         </TouchableOpacity>
       </View>
+      <Text style={styles.notesLabel}>Notes</Text>
+      <TextInput
+        style={styles.notesInput}
+        value={notes}
+        onChangeText={setNotes}
+        placeholder="Add notes..."
+        placeholderTextColor="#666"
+        multiline
+      />
     </View>
   );
 
@@ -104,10 +103,7 @@ export const EntryModal = ({ visible, habit, date, currentValue, onClose, onSave
     >
       <Pressable style={styles.overlay} onPress={onClose}>
         <Pressable style={styles.container} onPress={(e) => e.stopPropagation()}>
-          <Text style={styles.habitName}>{habit.name}</Text>
-          <Text style={styles.dateText}>
-            {date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
-          </Text>
+          <Text style={styles.habitName}>Notes</Text>
 
           {habit.type === 'yes/no' ? renderYesNoContent() : renderMeasurableContent()}
         </Pressable>
@@ -127,9 +123,9 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#2a2a2a',
     borderRadius: 8,
-    padding: 24,
+    padding: 16,
     width: '100%',
-    maxWidth: 400,
+    maxWidth: 300,
     borderWidth: 1,
     borderColor: '#3a3a3a',
   },
@@ -138,27 +134,31 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#fff',
     marginBottom: 4,
+    textAlign: 'center',
   },
   dateText: {
     fontSize: 14,
     color: '#888',
-    marginBottom: 24,
+    marginBottom: 16,
+    textAlign: 'center',
   },
   yesNoContainer: {
-    gap: 16,
+    gap: 12,
   },
   yesNoButtons: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    paddingVertical: 16,
-    gap: 40,
+    paddingVertical: 8,
+    gap: 12,
   },
   iconButton: {
-    padding: 20,
-    borderRadius: 12,
+    padding: 12,
+    borderRadius: 8,
     backgroundColor: '#1a1a1a',
     borderWidth: 1,
     borderColor: '#3a3a3a',
+    flex: 1,
+    alignItems: 'center',
   },
   measurableContainer: {
     gap: 16,
@@ -167,6 +167,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#888',
     marginBottom: -8,
+    textAlign: 'center',
   },
   notesInput: {
     backgroundColor: '#1a1a1a',
@@ -174,7 +175,7 @@ const styles = StyleSheet.create({
     padding: 12,
     color: '#fff',
     fontSize: 16,
-    minHeight: 80,
+    minHeight: 60,
     textAlignVertical: 'top',
     borderWidth: 1,
     borderColor: '#3a3a3a',
