@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Modal, TouchableOpacity, Pressable, TextInput } from 'react-native';
+import { Check, X } from 'lucide-react-native';
 import { Habit } from '@/models/Habit';
 import { EntryValue } from '@/models/HabitEntry';
 
@@ -36,30 +37,37 @@ export const EntryModal = ({ visible, habit, date, currentValue, onClose, onSave
 
   const renderYesNoContent = () => (
     <View style={styles.yesNoContainer}>
-      <TouchableOpacity
-        style={[styles.yesNoButton, value === 'yes' && styles.yesNoButtonActive]}
-        onPress={() => setValue('yes')}
-      >
-        <Text style={[styles.yesNoButtonText, value === 'yes' && styles.yesNoButtonTextActive]}>
-          Yes
-        </Text>
-      </TouchableOpacity>
+      <Text style={styles.notesLabel}>Notes</Text>
+      <TextInput
+        style={styles.notesInput}
+        value={notes}
+        onChangeText={setNotes}
+        placeholder="Add notes..."
+        placeholderTextColor="#666"
+        multiline
+      />
 
-      <TouchableOpacity
-        style={[styles.yesNoButton, value === 'no' && styles.yesNoButtonActive]}
-        onPress={() => setValue('no')}
-      >
-        <Text style={[styles.yesNoButtonText, value === 'no' && styles.yesNoButtonTextActive]}>
-          No
-        </Text>
-      </TouchableOpacity>
+      <View style={styles.yesNoButtons}>
+        <TouchableOpacity
+          style={styles.iconButton}
+          onPress={() => {
+            setValue('yes');
+            handleSave();
+          }}
+        >
+          <Check size={48} color="#4A9EFF" strokeWidth={3} />
+        </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.skipButton}
-        onPress={onClose}
-      >
-        <Text style={styles.skipButtonText}>Skip</Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.iconButton}
+          onPress={() => {
+            setValue('no');
+            handleSave();
+          }}
+        >
+          <X size={48} color="#888" strokeWidth={3} />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 
@@ -143,35 +151,20 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   yesNoContainer: {
-    gap: 12,
+    gap: 16,
   },
-  yesNoButton: {
+  yesNoButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: 16,
+    gap: 40,
+  },
+  iconButton: {
+    padding: 20,
+    borderRadius: 12,
     backgroundColor: '#1a1a1a',
-    borderRadius: 8,
-    padding: 16,
-    alignItems: 'center',
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: '#3a3a3a',
-  },
-  yesNoButtonActive: {
-    borderColor: '#4a9eff',
-    backgroundColor: '#1a3a5a',
-  },
-  yesNoButtonText: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#888',
-  },
-  yesNoButtonTextActive: {
-    color: '#fff',
-  },
-  skipButton: {
-    padding: 16,
-    alignItems: 'center',
-  },
-  skipButtonText: {
-    fontSize: 16,
-    color: '#888',
   },
   measurableContainer: {
     gap: 16,
